@@ -1,8 +1,11 @@
 module Blackjack
   class Hand
 
-    def initialize(cards)
-      @cards = cards
+    def initialize(*args)
+      @cards = []
+      args.flatten.each do |card|
+        @cards << card if CARDS.include?(card)
+      end
     end
     
     def value
@@ -26,6 +29,10 @@ module Blackjack
       end
         
       return value
+    end
+    
+    def <<(card)
+      @cards << card
     end
     
     def bust?
