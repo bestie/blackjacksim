@@ -12,4 +12,9 @@ module Blackjack
     end
   end
   
+  def self.strategy_file(filename)
+    filename += '.csv' unless filename[-4..-1] == '.csv'
+    File.join(File.dirname(__FILE__),"strategies",filename)
+  end
+  
 end

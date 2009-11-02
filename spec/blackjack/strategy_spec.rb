@@ -19,7 +19,7 @@ module Blackjack
     end
     
     it "should make correct decision for hit under 17 strategy" do
-      strategy = Strategy.new(strategy_file("hit_straight_under_17"))
+      strategy = Strategy.new(Blackjack.strategy_file("hit_straight_under_17"))
       CARDS.each do |upcard|
         players_hand = Hand.new(['J',6])
         dealers_upcard = Hand.new([upcard])
@@ -28,17 +28,12 @@ module Blackjack
     end
 
     it "should make correct decision for hit under 17 strategy" do
-      strategy = Strategy.new(strategy_file("hit_straight_under_17"))
+      strategy = Strategy.new(Blackjack.strategy_file("hit_straight_under_17"))
       CARDS.each do |upcard|
         players_hand = Hand.new([10,7])
         dealers_upcard = Hand.new([upcard])
         strategy.decision(players_hand, dealers_upcard).should == 'S'
       end
-    end
-    
-    def strategy_file(filename)
-      filename += '.csv' unless filename[-4..-1] == '.csv'
-      File.join(File.dirname(__FILE__),"..","..","spec","strategies",filename)
     end
   end
 end

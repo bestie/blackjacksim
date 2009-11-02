@@ -35,6 +35,10 @@ module Blackjack
       @cards << card
     end
     
+    def count
+      @cards.length
+    end
+    
     def bust?
       value > 21
     end
