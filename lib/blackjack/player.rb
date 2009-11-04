@@ -1,12 +1,16 @@
 module Blackjack
-  class Player 
+  class Player
     attr_accessor :hand
     attr_reader :bank_roll
     
-    def initialize(strategy, bank_roll = 100, hand = nil)
+    def initialize(strategy, bank_roll = 100)
       @strategy = strategy
-      @hand = hand || Hand.new
       @bank_roll = bank_roll
+      @hand = Hand.new
+    end
+    
+    def hit(card)
+      @hand << card
     end
     
     def decision(dealers_hand)

@@ -1,5 +1,11 @@
 Dir["#{File.dirname(__FILE__)}/../lib/**/*.rb"].each {|f| require f}
+Dir["#{File.dirname(__FILE__)}/support/*.rb"].each {|f| require f}
 
+Spec::Runner.configure do |config|
+  config.include(StandMatcher)
+end
+
+# add some extra methods to aid testing
 module Blackjack  
   class Hand
 
