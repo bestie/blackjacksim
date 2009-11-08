@@ -64,7 +64,7 @@ module Blackjack
     end
     
     it "should know when it is a pair" do
-      p Hand.new(2,2)
+      Hand.new(2,2)
       Hand.new(2,2).should be_a_pair
       Hand.new(10,10).should be_a_pair
       Hand.new('J','J').should be_a_pair
@@ -98,7 +98,18 @@ module Blackjack
       hand << 8
       hand.value.should == 18
     end
-      
     
+    it "should recognise a blackjack" do
+      hand = Hand.new('K', 'A')
+      hand.blackjack?.should be_true
+    end
+    
+    it "should raise and exception if bad card is passed" do
+      lambda {
+        hand = Hand.new
+        hand << nil
+      }.should raise_error(InvalidCardException)
+    end
+      
   end
 end

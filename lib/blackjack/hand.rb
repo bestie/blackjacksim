@@ -1,6 +1,8 @@
 module Blackjack
   class Hand
 
+    attr_reader :cards
+
     def initialize(*args)
       @cards = []
       args.flatten.each do |card|
@@ -32,6 +34,7 @@ module Blackjack
     end
     
     def <<(card)
+      raise InvalidCardException unless CARDS.include?(card)
       @cards << card
     end
     
@@ -66,6 +69,10 @@ module Blackjack
       else
         return value.to_s
       end
+    end
+    
+    def blackjack?
+      value == 21 and count == 2
     end
   end
 end
