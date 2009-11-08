@@ -1,6 +1,8 @@
 module Blackjack
   class Shoe
 
+    attr_reader :cards
+    
     def initialize(decks)
       @cards = []
       decks.times do
