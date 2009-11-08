@@ -5,8 +5,7 @@ module Blackjack
     attr_accessor :upcard
     
     def initialize
-      @hand = Hand.new
-      @upcard = Hand.new
+      initialize_hand
     end
     
     def hit(card)
@@ -16,6 +15,17 @@ module Blackjack
     
     def stand?
       @hand.value >= 17
+    end
+    
+    def surrender_hand
+      initialize_hand
+    end
+    
+    private
+    
+    def initialize_hand
+      @hand = Hand.new
+      @upcard = Hand.new
     end
   end
 end

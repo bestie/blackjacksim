@@ -37,6 +37,16 @@ module Blackjack
       @dealer.hit 5
       @dealer.upcard.value.should == 4
     end
+    
+    it "should reset at the beginning of a new hand" do
+      @dealer.hand.should have(0).cards
+      @dealer.hit 'A'
+      @dealer.hit 8
+      @dealer.hand.should have(2).cards
+      @dealer.upcard.should have(1).cards
+      @dealer.surrender_hand
+      @dealer.hand.should have(0).cards
+    end
 
   end
 end

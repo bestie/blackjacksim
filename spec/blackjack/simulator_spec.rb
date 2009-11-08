@@ -123,5 +123,66 @@ module Blackjack
         @sim.play_hand
       }.should change(@player, :bank_roll).by(-1)
     end
+    
+    it "should play many hands consecutively" do
+      10.times do      
+        # first a losing hand?
+        @shoe.should_deal_to( :player => ['K', 2, 4], :dealer => ['J', 2, 6])
+        @player.should_decide('H', 'S')
+        lambda { # player should lose
+          @sim.play_hand
+        }.should change(@player, :bank_roll).by(-1)
+        @player.hand.should have(3).cards
+        @dealer.hand.should have(3).cards
+      
+        # then a winning hand
+        @shoe.should_deal_to( :player => ['K', 5, 6], :dealer => ['J', 2, 6])
+        @player.should_decide('H', 'S')
+        lambda { # player should lose
+          @sim.play_hand
+        }.should change(@player, :bank_roll).by(1)
+        @player.hand.should have(3).cards
+        @dealer.hand.should have(3).cards
+      end
+      
+      @player.bank_roll.should == 100
+    end
+    
+    it "should return a value corresponding to a loss, no busts" do
+      @shoe.should_deal_to( :player => ['K', 2, 4], :dealer => ['J', 2, 6])
+      @player.should_decide('H', 'S')
+      @sim.play_hand.should be_a(PlayerLoss)
+      
+    end
+    
+    it "should return a value corresponding to a win, no busts" do
+      @shoe.should_deal_to( :player => ['K', 5, 6], :dealer => ['J', 2, 6])
+      @player.should_decide('H', 'S')
+      @sim.play_hand.should be_a(PlayerWin)
+    end
+    
+    it "should return an appropriate value for a player getting a blackjack" do
+      @shoe.should_deal_to( :player => ['K', 'A'], :dealer => [8, 5])
+      @player.should_not_receive(:decision)
+      result = @sim.play_hand
+      result.should be_a(PlayerWin)
+      result.should be_a(PlayerBlackjack)
+    end
+    
+    it "should return an appropriate value for player bankrupt" do
+      @player = Player.new(@strategy, 0)
+      @sim = Simulator.new(@player, @dealer, @shoe, @messenger)
+      result = @sim.play_hand
+      result.should be_a(PlayerLoss)
+      result.should be_a(PlayerBankrupt)
+    end
+    
+    it "should return an appropriate value for player going bust" do
+      @shoe.should_deal_to( :player => [10, 3, 2, 10], :dealer => [8, 5])
+      @player.should_decide('H', 'H')
+      result = @sim.play_hand
+      result.should be_a(PlayerBust)
+      result.should be_a(PlayerLoss)
+    end
   end
 end

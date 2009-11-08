@@ -5,7 +5,7 @@ module Blackjack
     def initialize(strategy, bank_roll = 100)
       @strategy = strategy
       @bank_roll = bank_roll
-      @hand = Hand.new
+      initialize_hand
     end
     
     def hit(card)
@@ -31,6 +31,16 @@ module Blackjack
   
     def pay(amount)
       @bank_roll += amount
+    end
+
+    def surrender_hand
+      initialize_hand
+    end
+
+    private
+    
+    def initialize_hand
+      @hand = Hand.new
     end
   end
 end

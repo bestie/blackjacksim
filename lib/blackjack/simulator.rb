@@ -1,4 +1,12 @@
 module Blackjack
+  
+  class PlayerWin; end
+  class PlayerLoss; end
+  
+  class PlayerBlackjack < PlayerWin; end
+  class PlayerBankrupt < PlayerLoss; end
+  class PlayerBust < PlayerLoss; end
+  
   class Simulator
     def initialize(player, dealer, shoe, messenger)
       @player = player
@@ -13,9 +21,13 @@ module Blackjack
 
     def play_hand
       output "New Hand"
+   
+      @dealer.surrender_hand
+      @player.surrender_hand
+      
       if @player.bankrupt?
         output "Game Over: Player bankrupt"
-        return false
+        return PlayerBankrupt.new
       end
 
       @bet = @player.wager
@@ -26,12 +38,12 @@ module Blackjack
       
       if @player.hand.blackjack?
         @player.pay( 2.5 * @bet )
-        return true
+        return PlayerBlackjack.new
       end
 
       until @player.decision(@dealer.upcard) == 'S'
         @player.hit @shoe.deal
-        return false if @player.hand.bust?
+        return PlayerBust.new if @player.hand.bust?
       end
       
       until @dealer.stand? do
@@ -40,7 +52,9 @@ module Blackjack
       
       if @dealer.hand.bust? or @player.hand.value > @dealer.hand.value
         @player.pay( 2 * @bet )
-        return true
+        return PlayerWin.new
+      else
+        return PlayerLoss.new
       end
     end
     

@@ -25,13 +25,13 @@ module Blackjack
     
     it "should accept new cards into its hand" do
       player = Player.new(@strategy, @hand)
-      player.hand.count.should == 0
+      player.hand.should have(0).cards
       
       player.hit 'K'
-      player.hand.count.should == 1
+      player.hand.should have(1).cards
       
       player.hit 4
-      player.hand.count.should == 2
+      player.hand.should have(2).cards
     end
     
     it "should make strategic decisions based on the dealers and its own hands" do
@@ -77,6 +77,15 @@ module Blackjack
           player.pay(amount_won)
         }.should change(player, :bank_roll).by(amount_won)
       end
+    end
+    
+    it "should reset at the beginning of a new hand" do
+      player = Player.new(@strategy, 100)
+      player.hit 'A'
+      player.hit 8
+      player.hand.should have(2).cards
+      player.surrender_hand
+      player.hand.should have(0).cards
     end
   end
 end
