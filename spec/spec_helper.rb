@@ -29,7 +29,6 @@ module Blackjack
   
   class Shoe
     def should_deal(*cards)
-      # p cards
       cards.flatten!.reverse!
       self.should_receive(:deal).at_least(cards.length).times.and_return { cards.pop }
     end
@@ -51,23 +50,26 @@ module Blackjack
     end
     
     def should_deal_to(hash)
+      should_deal self.class.arrange_cards(hash)
+    end
+    
+    def self.arrange_cards(hash)
       player_cards = hash[:player].flatten.reverse
       dealer_cards = [10,7]
       dealer_cards = hash[:dealer].flatten.reverse if hash[:dealer].is_a?(Array)
       all_cards = []
-      
+
       # alternate cards first two
       2.times do
         all_cards << player_cards.pop if player_cards.length > 0
         all_cards << dealer_cards.pop if dealer_cards.length > 0
       end
-      
+
       # players cards next
       player_cards.length.times { all_cards << player_cards.pop }
       # then dealers cards
       dealer_cards.length.times { all_cards << dealer_cards.pop }
-      
-      should_deal all_cards
+      return all_cards
     end
   end
   

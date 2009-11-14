@@ -8,6 +8,9 @@ module Blackjack
   class PlayerBust < PlayerLoss; end
   
   class Simulator
+    
+    attr_reader :shoe
+    
     def initialize(player, dealer, shoe, messenger)
       @player = player
       @messenger = messenger

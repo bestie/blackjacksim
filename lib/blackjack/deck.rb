@@ -1,16 +1,16 @@
 module Blackjack
   class Deck
-    attr_accessor :cards
+    attr_reader :cards
     
     def initialize
-      self.cards = []
+      @cards = []
       4.times do
         CARDS.each do |card|
-          self.cards << card
+          @cards << card
         end
       end
       
-      self.cards = self.cards.sort_by { rand }
+      @cards = @cards.sort_by { rand }
     end
   end
 end

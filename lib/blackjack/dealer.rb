@@ -1,8 +1,8 @@
 module Blackjack
   class Dealer
     
-    attr_accessor :hand
-    attr_accessor :upcard
+    attr_reader :hand
+    attr_reader :upcard
     
     def initialize
       initialize_hand
