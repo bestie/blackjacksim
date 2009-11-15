@@ -43,7 +43,7 @@ module Blackjack
           display "LOSE"
           if result.is_a?(PlayerBankrupt)
             display "GAME OVER Player bankrupt"
-            return exit
+            break
           end
         end
       end

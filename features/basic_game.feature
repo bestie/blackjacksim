@@ -52,3 +52,4 @@ Feature: Basic game simulation
     Then I should see "Simulating 101 hands"
     And I should see 101 "LOSE" results
     And I should see "GAME OVER Player bankrupt"
+    And I should see a results summary
