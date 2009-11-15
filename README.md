@@ -17,15 +17,11 @@ The aim is to be as close to a casino blackjack game as possible and the followi
 * Dealer always stands on 17
 * Blackjack pays 3 to 2
 
--------------------------------------------------------------------------------
-
 ## Usage
 
 From project root:
 
     $ bin/blackjacksim <strategy CSV> [--number-of-hands ...]
-
--------------------------------------------------------------------------------
 
 ## Still to implement
 
