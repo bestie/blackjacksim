@@ -17,7 +17,7 @@ module Blackjack
     end
     
     def bankrupt?
-      not @bank_roll > 0
+      @bank_roll < 1
     end
     
     def wager(size = 1)

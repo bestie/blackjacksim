@@ -42,11 +42,15 @@ module Blackjack
       player.decision(dealers_hand).should == 'H'
     end
     
-    it "should admit bankrupcy when bankroll is depleted" do
+    it "should admit bankruptcy when bankroll is depleted" do
       player = Player.new(@strategy, 0)
       player.should be_bankrupt
+      
+      # if player has won a blackjack this can introduce a half unit
+      player = Player.new(@strategy, 0.5)
+      player.should be_bankrupt
     end
-    
+
     it "should wager and subtract from bank roll" do
       player = Player.new(@strategy, 100)
       lambda {
