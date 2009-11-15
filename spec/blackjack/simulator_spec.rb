@@ -30,8 +30,7 @@ module Blackjack
        @player.should_receive(:bankrupt?).once.and_return(true)
        @shoe.should_not_receive(:deal)
        
-       @sim.play_hand
-       output_should_include "Game Over: Player bankrupt"
+       @sim.play_hand.should be_a(PlayerBankrupt)
      end
      
      it "should deal no more cards if the player decides to stand" do

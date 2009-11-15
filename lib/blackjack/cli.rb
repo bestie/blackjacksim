@@ -1,11 +1,14 @@
+require 'optparse'
+
 module Blackjack
   class CLI
     attr_reader :simulator
     DEFAULT_BANK_ROLL = 100
+    DEFAULT_HANDS = 10
     
     def initialize(stdout, arguments)
       @stdout = stdout
-      @strategy_file = arguments[0]
+      return exit unless load_args(arguments)
       
       unless @strategy_file and File.exists?(@strategy_file)
         display "No strategy file provided"
@@ -22,14 +25,15 @@ module Blackjack
     end
     
     def start
-      display "Simulating 10 hands"
+      return exit unless @simulator
+      display "Simulating #{@hands} hands"
       display "Bank roll 100 chips"
       display ""
       
       win_count = 0
       loss_count = 0
       
-      10.times do
+      @hands.times do
         result = @simulator.play_hand
         if result.is_a?(PlayerWin)
           win_count += 1
@@ -37,6 +41,10 @@ module Blackjack
         elsif result.is_a?(PlayerLoss)
           loss_count += 1
           display "LOSE"
+          if result.is_a?(PlayerBankrupt)
+            display "GAME OVER Player bankrupt"
+            return exit
+          end
         end
       end
       
@@ -55,5 +63,33 @@ module Blackjack
     
     def exit
     end
+    
+    def load_args(arguments)
+      if arguments.length == 0
+        display HELP_MESSAGE
+        return exit
+      end
+      
+      @strategy_file = arguments.shift unless arguments[0][0].chr == '-'
+      @hands = DEFAULT_HANDS
+
+      opts = OptionParser.new do |opts|
+        opts.banner = WELCOME
+        opts.on( '-n [NUMBER]', '--number-of-hands [NUMBER]', Float, 'Number of hands to be played' ) do |n|
+          @hands = n.to_i
+        end
+        opts.on( '-h', '--help', 'Display this screen' ) do
+          display USAGE
+          display opts
+          # return exit
+        end
+      end
+      
+      opts.parse!(arguments)
+    end
+    
+    WELCOME = %Q{Blackjacksim v0.1\nauthor: Stephen Best\nFork me: http://github.com/bestie/blackjacksim}
+    USAGE = %Q{Usage: blackjacksim <strategy csv file> [options]}
+    HELP_MESSAGE = %Q{blackjacksim --help for more info} 
   end
 end

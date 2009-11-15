@@ -18,39 +18,32 @@ module Blackjack
       @dealer = dealer
     end
     
-    def output(string)
-      @messenger.puts(string)
-    end
-
-    def play_hand
-      output "New Hand"
-   
+    def play_hand      
       @dealer.surrender_hand
       @player.surrender_hand
       
       if @player.bankrupt?
-        output "Game Over: Player bankrupt"
         return PlayerBankrupt.new
       end
-
+      
       @bet = @player.wager
       2.times do
-        @player.hit @shoe.deal
-        @dealer.hit @shoe.deal
+        @player.hit get_card
+        @dealer.hit get_card
       end
       
       if @player.hand.blackjack?
         @player.pay( 2.5 * @bet )
         return PlayerBlackjack.new
       end
-
+      
       until @player.decision(@dealer.upcard) == 'S'
-        @player.hit @shoe.deal
+        @player.hit get_card
         return PlayerBust.new if @player.hand.bust?
       end
       
       until @dealer.stand? do
-        @dealer.hit @shoe.deal
+        @dealer.hit get_card
       end
       
       if @dealer.hand.bust? or @player.hand.value > @dealer.hand.value
@@ -61,5 +54,20 @@ module Blackjack
       end
     end
     
+    private ##################################################################
+    
+    def get_card
+      card = @shoe.deal
+      if card.nil?
+        @shoe.reset_cards
+        card = @shoe.deal
+      end
+      
+      return card
+    end
+    
+    def output(string)
+      @messenger.puts(string)
+    end
   end
 end
